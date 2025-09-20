@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Room;
 use App\Models\Booking;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth; // TAMBAHAN INI
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -43,16 +43,19 @@ class BookingController extends Controller
 
         // Calculate check-in and check-out times
         $checkIn = Carbon::parse($request->booking_date . ' ' . now()->format('H:i:s'));
-        $checkOut = $checkIn->copy()->addHours($request->duration_hours);
+
+        // FIX: Convert string to integer explicitly
+        $durationHours = (int) $request->duration_hours;
+        $checkOut = $checkIn->copy()->addHours($durationHours);
 
         // Create booking
         $booking = Booking::create([
             'room_id' => $room->id,
-            'user_id' => Auth::id(), // FIXED
+            'user_id' => Auth::id(),
             'guest_name' => $request->guest_name,
             'check_in' => $checkIn,
             'check_out' => $checkOut,
-            'duration_hours' => $request->duration_hours,
+            'duration_hours' => $durationHours, // Use converted integer
             'total_price' => $request->total_price,
             'notes' => $request->notes,
         ]);

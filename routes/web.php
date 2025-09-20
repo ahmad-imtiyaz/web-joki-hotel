@@ -2,19 +2,20 @@
 // File: routes/web.php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // TAMBAHAN INI - WAJIB!
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CleaningController;
 use App\Http\Controllers\UserManagementController;
+use App\Http\Middleware\RoleMiddleware; // TAMBAH INI
 
 // Default route
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Auth routes - FIXED
+// Auth routes
 Auth::routes(['register' => false]);
 
 // Protected routes
@@ -24,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Rooms - accessible by Super Admin and Kasir
-    Route::middleware(['checkrole:super_admin,kasir'])->group(function () {
+    Route::middleware([RoleMiddleware::class . ':super_admin,kasir'])->group(function () {
         Route::get('/rooms/manage', [RoomController::class, 'manage'])->name('rooms.manage');
         Route::get('/rooms/create', [RoomController::class, 'create'])->name('rooms.create');
         Route::post('/rooms', [RoomController::class, 'store'])->name('rooms.store');
@@ -39,14 +40,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Cleaning - accessible by Super Admin and Cleaning
-    Route::middleware(['checkrole:super_admin,cleaning'])->group(function () {
+    Route::middleware([RoleMiddleware::class . ':super_admin,cleaning'])->group(function () {
         Route::get('/cleaning', [CleaningController::class, 'index'])->name('cleaning.index');
         Route::post('/cleaning/{notification}/accept', [CleaningController::class, 'accept'])->name('cleaning.accept');
         Route::post('/cleaning/{notification}/complete', [CleaningController::class, 'complete'])->name('cleaning.complete');
     });
 
     // User Management - only Super Admin
-    Route::middleware(['checkrole:super_admin'])->group(function () {
+    Route::middleware([RoleMiddleware::class . ':super_admin'])->group(function () {
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::get('/users/create', [UserManagementController::class, 'create'])->name('users.create');
         Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
