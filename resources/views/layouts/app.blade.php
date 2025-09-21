@@ -52,6 +52,47 @@
             top: -8px;
             left: -5px;
         }
+        /* Tambahkan di style section pada app.blade.php */
+
+.report-stats-card {
+    transition: transform 0.2s;
+}
+
+.report-stats-card:hover {
+    transform: translateY(-3px);
+}
+
+.filter-card {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.data-table {
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+}
+
+.export-btn {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    transition: all 0.3s;
+}
+
+.export-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.4);
+}
+
+.status-badge-table {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -97,6 +138,16 @@
                                 </a>
                             </li>
                             @endif
+
+                            {{-- Tambahkan ini di sidebar setelah menu Cleaning dan sebelum Kelola User --}}
+@if(auth()->user()->canManageRooms())
+<li class="nav-item">
+    <a class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}" 
+       href="{{ route('reports.index') }}">
+        <i class="fas fa-file-alt me-2"></i> Cetak Laporan
+    </a>
+</li>
+@endif
                             
                             @if(auth()->user()->isSuperAdmin())
                             <li class="nav-item">
@@ -164,6 +215,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        
         // Auto refresh timer every second
         setInterval(function() {
             const timers = document.querySelectorAll('[data-timer]');

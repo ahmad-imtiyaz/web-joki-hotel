@@ -1,6 +1,10 @@
 <?php
 
 return [
+    // 1. Tambahkan di config/app.php untuk nama hotel
+    'hotel_name' => env('HOTEL_NAME', 'Grand Hotel Paradise'),
+    'hotel_address' => env('HOTEL_ADDRESS', 'Jl. Hotel Mewah No. 123, Kota Impian'),
+    'hotel_phone' => env('HOTEL_PHONE', '(021) 123-4567'),
 
     /*
     |--------------------------------------------------------------------------

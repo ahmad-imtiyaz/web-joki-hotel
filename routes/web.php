@@ -62,3 +62,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [UserManagementController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/password', [UserManagementController::class, 'updatePassword'])->name('profile.password');
 });
+// Tambahkan route ini ke file routes/web.php
+
+// Reports Routes - hanya untuk superadmin dan kasir
+Route::middleware(['auth'])->group(function () {
+    Route::get('/reports', [App\Http\Controllers\ReportController::class, 'index'])
+        ->name('reports.index');
+    Route::get('/reports/export-pdf', [App\Http\Controllers\ReportController::class, 'exportPdf'])
+        ->name('reports.export-pdf');
+});
