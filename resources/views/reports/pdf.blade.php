@@ -66,10 +66,10 @@
         
         .data-table th,
         .data-table td {
-            padding: 6px;
+            padding: 4px;
             border: 1px solid #bdc3c7;
             text-align: left;
-            font-size: 10px;
+            font-size: 9px;
         }
         
         .data-table th {
@@ -99,15 +99,25 @@
         }
         
         .status-badge {
-            padding: 2px 6px;
-            border-radius: 3px;
+            padding: 1px 4px;
+            border-radius: 2px;
             color: white;
-            font-size: 9px;
+            font-size: 8px;
+        }
+        
+        .payment-badge {
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-size: 7px;
+            color: white;
         }
         
         .status-active { background-color: #27ae60; }
         .status-completed { background-color: #3498db; }
         .status-cancelled { background-color: #e74c3c; }
+        
+        .payment-cash { background-color: #27ae60; }
+        .payment-transfer { background-color: #3498db; }
         
         .page-break {
             page-break-before: always;
@@ -119,6 +129,11 @@
         
         .text-center {
             text-align: center;
+        }
+        
+        .phone-text {
+            font-size: 8px;
+            color: #666;
         }
     </style>
 </head>
@@ -155,16 +170,18 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th width="5%">No</th>
-                    <th width="12%">Tgl Pesan</th>
-                    <th width="15%">Nama Pemesan</th>
-                    <th width="15%">Kamar</th>
-                    <th width="10%">Check-in</th>
-                    <th width="10%">Check-out</th>
-                    <th width="8%">Durasi</th>
-                    <th width="12%">Harga</th>
-                    <th width="8%">Status</th>
-                    <th width="10%">Kasir</th>
+                    <th width="4%">No</th>
+                    <th width="10%">Tgl Pesan</th>
+                    <th width="12%">Nama Pemesan</th>
+                    <th width="9%">No. HP</th>
+                    <th width="12%">Kamar</th>
+                    <th width="8%">Check-in</th>
+                    <th width="8%">Check-out</th>
+                    <th width="5%">Durasi</th>
+                    <th width="10%">Harga</th>
+                    <th width="7%">Bayar</th>
+                    <th width="7%">Status</th>
+                    <th width="8%">Kasir</th>
                 </tr>
             </thead>
             <tbody>
@@ -173,7 +190,8 @@
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td>{{ $booking->created_at->format('d/m/Y H:i') }}</td>
                     <td>{{ $booking->guest_name }}</td>
-                    <td>{{ $booking->room->room_number }} - {{ Str::limit($booking->room->room_name, 15) }}</td>
+                    <td class="phone-text">{{ $booking->phone_number }}</td>
+                    <td>{{ $booking->room->room_number }} - {{ Str::limit($booking->room->room_name, 12) }}</td>
                     <td>{{ $booking->check_in->format('d/m H:i') }}</td>
                     <td>{{ $booking->check_out->format('d/m H:i') }}</td>
                     <td class="text-center">
@@ -183,6 +201,17 @@
                         {{ $duration }}j
                     </td>
                     <td class="text-right">{{ number_format($booking->total_price, 0, ',', '.') }}</td>
+                    <td class="text-center">
+                        <span class="payment-badge payment-{{ $booking->payment_method }}">
+                            @if($booking->payment_method === 'cash')
+                                Cash
+                            @elseif($booking->payment_method === 'transfer')
+                                Transfer
+                            @else
+                                {{ ucfirst($booking->payment_method) }}
+                            @endif
+                        </span>
+                    </td>
                     <td class="text-center">
                         <span class="status-badge status-{{ $booking->status }}">
                             @if($booking->status === 'active')
@@ -194,15 +223,15 @@
                             @endif
                         </span>
                     </td>
-                    <td>{{ $booking->user->name ?? '-' }}</td>
+                    <td>{{ Str::limit($booking->user->name ?? '-', 10) }}</td>
                 </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr class="total-row">
-                    <td colspan="7" class="text-right"><strong>TOTAL PENDAPATAN:</strong></td>
+                    <td colspan="8" class="text-right"><strong>TOTAL PENDAPATAN:</strong></td>
                     <td class="text-right"><strong>Rp {{ number_format($total_revenue, 0, ',', '.') }}</strong></td>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                 </tr>
             </tfoot>
         </table>

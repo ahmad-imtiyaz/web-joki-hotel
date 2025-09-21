@@ -128,11 +128,13 @@
                             <th>No</th>
                             <th>Tanggal Pesan</th>
                             <th>Nama Pemesan</th>
+                            <th>No. Telepon</th>
                             <th>Kamar</th>
                             <th>Check-in</th>
                             <th>Check-out</th>
                             <th>Durasi</th>
                             <th>Harga</th>
+                            <th>Metode Bayar</th>
                             <th>Status</th>
                             <th>Kasir</th>
                         </tr>
@@ -143,6 +145,11 @@
                             <td>{{ $bookings->firstItem() + $index }}</td>
                             <td>{{ $booking->created_at->format('d/m/Y H:i') }}</td>
                             <td>{{ $booking->guest_name }}</td>
+                            <td>
+                                <span class="text-muted small">
+                                    <i class="fas fa-phone me-1"></i>{{ $booking->phone_number }}
+                                </span>
+                            </td>
                             <td>{{ $booking->room->room_number }} - {{ $booking->room->room_name }}</td>
                             <td>{{ $booking->check_in->format('d/m/Y H:i') }}</td>
                             <td>{{ $booking->check_out->format('d/m/Y H:i') }}</td>
@@ -153,6 +160,19 @@
                                 {{ $duration }} jam
                             </td>
                             <td>Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
+                            <td>
+                                @if($booking->payment_method === 'cash')
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-money-bill-wave me-1"></i>Cash
+                                    </span>
+                                @elseif($booking->payment_method === 'transfer')
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-credit-card me-1"></i>Transfer
+                                    </span>
+                                @else
+                                    <span class="badge bg-secondary">{{ ucfirst($booking->payment_method) }}</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($booking->status === 'active')
                                     <span class="badge bg-success">Aktif</span>
@@ -168,9 +188,9 @@
                     </tbody>
                     <tfoot class="table-secondary">
                         <tr>
-                            <th colspan="7" class="text-end">Total Pendapatan:</th>
+                            <th colspan="8" class="text-end">Total Pendapatan:</th>
                             <th>Rp {{ number_format($bookings->sum('total_price'), 0, ',', '.') }}</th>
-                            <th colspan="2"></th>
+                            <th colspan="3"></th>
                         </tr>
                     </tfoot>
                 </table>

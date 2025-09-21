@@ -27,10 +27,17 @@ class BookingController extends Controller
         $request->validate([
             'room_id' => 'required|exists:rooms,id',
             'guest_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20|regex:/^[0-9+\-\s]+$/',
             'booking_date' => 'required|date|after_or_equal:today',
             'duration_hours' => 'required|integer|min:1|max:720', // max 30 days
             'total_price' => 'required|numeric|min:0',
+            'payment_method' => 'required|in:cash,transfer',
             'notes' => 'nullable|string',
+        ], [
+            'phone_number.required' => 'Nomor telepon harus diisi.',
+            'phone_number.regex' => 'Format nomor telepon tidak valid.',
+            'payment_method.required' => 'Metode pembayaran harus dipilih.',
+            'payment_method.in' => 'Metode pembayaran tidak valid.',
         ]);
 
         $room = Room::findOrFail($request->room_id);
@@ -53,10 +60,12 @@ class BookingController extends Controller
             'room_id' => $room->id,
             'user_id' => Auth::id(),
             'guest_name' => $request->guest_name,
+            'phone_number' => $request->phone_number,
             'check_in' => $checkIn,
             'check_out' => $checkOut,
             'duration_hours' => $durationHours, // Use converted integer
             'total_price' => $request->total_price,
+            'payment_method' => $request->payment_method,
             'notes' => $request->notes,
         ]);
 

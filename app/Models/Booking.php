@@ -14,10 +14,12 @@ class Booking extends Model
         'room_id',
         'user_id',
         'guest_name',
+        'phone_number',
         'check_in',
         'check_out',
         'total_price',
         'duration_hours',
+        'payment_method',
         'status',
         'notes',
     ];
@@ -26,6 +28,13 @@ class Booking extends Model
         'check_in' => 'datetime',
         'check_out' => 'datetime',
         'total_price' => 'decimal:2',
+        'payment_method' => 'string',
+    ];
+
+    // Payment method enum values
+    public const PAYMENT_METHODS = [
+        'cash' => 'Cash',
+        'transfer' => 'Transfer',
     ];
 
     // Relationships
@@ -81,5 +90,10 @@ class Booking extends Model
             $hours = $this->duration_hours % 24;
             return $days . ' hari' . ($hours > 0 ? ' ' . $hours . ' jam' : '');
         }
+    }
+
+    public function getPaymentMethodLabelAttribute()
+    {
+        return self::PAYMENT_METHODS[$this->payment_method] ?? $this->payment_method;
     }
 }

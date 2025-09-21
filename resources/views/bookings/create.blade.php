@@ -13,13 +13,28 @@
                     @csrf
                     <input type="hidden" name="room_id" value="{{ $room->id }}">
                     
-                    <div class="mb-3">
-                        <label for="guest_name" class="form-label">Nama Tamu <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control @error('guest_name') is-invalid @enderror" 
-                               id="guest_name" name="guest_name" value="{{ old('guest_name') }}" required>
-                        @error('guest_name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="guest_name" class="form-label">Nama Tamu <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control @error('guest_name') is-invalid @enderror" 
+                                       id="guest_name" name="guest_name" value="{{ old('guest_name') }}" required>
+                                @error('guest_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone_number" class="form-label">Nomor Telepon <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control @error('phone_number') is-invalid @enderror" 
+                                       id="phone_number" name="phone_number" value="{{ old('phone_number') }}" 
+                                       placeholder="08xxxxxxxxxx" required>
+                                @error('phone_number')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="row">
@@ -48,26 +63,49 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="total_price" class="form-label">Total Harga <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <span class="input-group-text">Rp</span>
-                            <input type="number" class="form-control @error('total_price') is-invalid @enderror" 
-                                   id="total_price" name="total_price" 
-                                   value="{{ old('total_price', $room->price) }}" min="0" required>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="total_price" class="form-label">Total Harga <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="number" class="form-control @error('total_price') is-invalid @enderror" 
+                                           id="total_price" name="total_price" 
+                                           value="{{ old('total_price', $room->price) }}" min="0" required>
+                                </div>
+                                @error('total_price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <div class="form-text">
+                                    Harga dasar: Rp {{ number_format($room->price, 0, ',', '.') }} per jam
+                                </div>
+                            </div>
                         </div>
-                        @error('total_price')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                        <div class="form-text">
-                            Harga dasar: Rp {{ number_format($room->price, 0, ',', '.') }} per jam
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="payment_method" class="form-label">Metode Pembayaran <span class="text-danger">*</span></label>
+                                <select class="form-select @error('payment_method') is-invalid @enderror" 
+                                        id="payment_method" name="payment_method" required>
+                                    <option value="">Pilih metode pembayaran</option>
+                                    <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>
+                                        <i class="fas fa-money-bill-wave"></i> Cash
+                                    </option>
+                                    <option value="transfer" {{ old('payment_method') == 'transfer' ? 'selected' : '' }}>
+                                        <i class="fas fa-credit-card"></i> Transfer
+                                    </option>
+                                </select>
+                                @error('payment_method')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="notes" class="form-label">Catatan</label>
                         <textarea class="form-control @error('notes') is-invalid @enderror" 
-                                  id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
+                                  id="notes" name="notes" rows="3" 
+                                  placeholder="Tambahkan catatan khusus untuk pemesanan ini...">{{ old('notes') }}</textarea>
                         @error('notes')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -110,6 +148,13 @@
                         Pemesanan akan dimulai saat ini dan berakhir sesuai durasi yang dipilih.
                     </small>
                 </div>
+                
+                <div class="alert alert-warning">
+                    <small>
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Pastikan nomor telepon aktif untuk konfirmasi pemesanan.
+                    </small>
+                </div>
             </div>
         </div>
     </div>
@@ -121,6 +166,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const durationInput = document.getElementById('duration_hours');
     const priceInput = document.getElementById('total_price');
+    const paymentMethod = document.getElementById('payment_method');
     const basePrice = {{ $room->price }};
     
     function calculateTotal() {
@@ -129,7 +175,23 @@ document.addEventListener('DOMContentLoaded', function() {
         priceInput.value = total;
     }
     
+    // Auto calculate total when duration changes
     durationInput.addEventListener('input', calculateTotal);
+    
+    // Add icon to payment method options (optional visual enhancement)
+    paymentMethod.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            console.log('Selected payment method:', selectedOption.value);
+        }
+    });
+    
+    // Phone number formatting (optional)
+    const phoneInput = document.getElementById('phone_number');
+    phoneInput.addEventListener('input', function() {
+        // Remove non-numeric characters except +, -, and spaces
+        this.value = this.value.replace(/[^0-9+\-\s]/g, '');
+    });
     
     // Initial calculation
     calculateTotal();
