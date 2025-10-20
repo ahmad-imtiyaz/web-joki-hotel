@@ -7,55 +7,175 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# 🏨 Web Joki Hotel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplikasi pemesanan kamar hotel berbasis **Laravel**.  
+Proyek ini dirancang untuk memudahkan pengelolaan data kamar, pengguna, dan transaksi pemesanan dalam satu sistem terpadu.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Fitur Utama
 
-## Learning Laravel
+- ✅ Autentikasi pengguna (login & registrasi)
+- 🏠 Manajemen data kamar (CRUD)
+- 📅 Pemesanan kamar hotel
+- 👥 Manajemen pengguna & admin
+- 💾 Migrasi & seeding database otomatis
+- 💻 Antarmuka berbasis web responsif
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## ⚙️ Prasyarat
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Pastikan sistem kamu sudah terpasang:
 
-## Laravel Sponsors
+| Komponen | Versi Minimum |
+|-----------|----------------|
+| PHP | 8.0 atau lebih baru |
+| Composer | Terinstal |
+| MySQL / MariaDB | 10.x / 5.7 |
+| Node.js & NPM *(opsional)* | 14+ |
+| Web Server | Apache / Nginx / Laravel Built-in Server |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🧩 Instalasi
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/ahmad-imtiyaz/web-joki-hotel.git
+   cd web-joki-hotel
+Install Dependency
 
-## Contributing
+composer install
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+Salin File Konfigurasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+cp .env.example .env
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Atur Konfigurasi Database
+Edit file .env sesuai pengaturan lokal kamu:
 
-## License
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=web_joki_hotel
+DB_USERNAME=root
+DB_PASSWORD=
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Generate App Key
+
+php artisan key:generate
+
+
+Migrasi Database
+Jalankan perintah berikut untuk membuat tabel:
+
+php artisan migrate
+
+
+Jika terdapat seeder (contoh data awal), jalankan:
+
+php artisan db:seed
+
+
+Jalankan Server
+
+php artisan serve
+
+
+Akses aplikasi di:
+👉 http://localhost:8000
+
+🗃️ Migrasi Database
+Menjalankan Migrasi Baru
+php artisan migrate
+
+Mengembalikan Migrasi Terakhir
+php artisan migrate:rollback
+
+Mengulang Semua Migrasi
+php artisan migrate:fresh --seed
+
+
+💡 Pastikan koneksi database di .env benar sebelum menjalankan migrasi.
+
+🔐 Login & Akses
+Akun Default (Jika Seeder Aktif)
+Email: admin@example.com
+Password: password
+
+Langkah Login
+
+Jalankan php artisan serve
+
+Buka browser → http://localhost:8000
+
+Pilih Login
+
+Masukkan kredensial di atas
+
+Setelah login berhasil, pengguna diarahkan ke Dashboard Admin
+
+Jika akun default tidak tersedia, buat pengguna baru melalui fitur Register atau tambahkan manual di database.
+
+📂 Struktur Folder Penting
+Folder	Deskripsi
+app/	Berisi controller, model, middleware, dan logika aplikasi
+database/	File migrasi, seeder, dan factory
+resources/views/	Template Blade (UI tampilan web)
+routes/web.php	Definisi rute utama aplikasi
+public/	Folder akses publik (CSS, JS, gambar)
+config/	Pengaturan konfigurasi aplikasi Laravel
+👨‍💻 Kontribusi
+
+Ingin berkontribusi pada proyek ini?
+
+Fork repository ini
+
+Buat branch baru:
+
+git checkout -b fitur-baru
+
+
+Commit perubahan:
+
+git commit -m "Menambahkan fitur baru"
+
+
+Push ke branch:
+
+git push origin fitur-baru
+
+
+Buat pull request di GitHub
+
+📜 Lisensi
+
+Proyek ini dirilis dengan lisensi MIT License.
+Silakan digunakan dan dimodifikasi secara bebas dengan tetap mencantumkan atribusi pengembang asli.
+
+🧠 Pengembang
+
+Ahmad Imtiyaz
+📧 imtiyaznajih8@gmail.com
+🌐 https://github.com/ahmad-imtiyaz
+
+🏁 Penutup
+
+Jika kamu mengalami kendala saat instalasi atau migrasi database, jalankan perintah berikut untuk debugging:
+
+php artisan config:clear
+php artisan cache:clear
+php artisan migrate:fresh --seed
+
+
+Setelah itu, coba jalankan ulang server dengan:
+
+php artisan serve
+
+
+Aplikasi Web Joki Hotel kini siap digunakan 🎉
